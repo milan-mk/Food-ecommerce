@@ -15,6 +15,6 @@ export function AdminRoute() {
   const { user, loading } = useAuth();
   const location = useLocation();
   if (loading) return <Spinner label="Checking your session..." className="min-h-[50vh]" />;
-  if (!user) return <Navigate to="/login" replace state={{ from: location.pathname }} />;
+  if (!user) return <Navigate to="/admin/login" replace state={{ from: location.pathname }} />;
   return user.role === 'admin' ? <Outlet /> : <Navigate to="/" replace />;
 }

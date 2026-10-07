@@ -81,7 +81,7 @@ async function capturePayment({ orderId, paypalOrderId, user }) {
   // The decisive step: trust only what PayPal told the SERVER.
   const result = verifyPaypalCapture({ order, paypalOrder });
   if (!result.ok) {
-    console.error(`PAYMENT VERIFICATION FAILED order=${order._id} paypalOrder=${paypalOrderId}: ${result.reason}`);
+    if (process.env.NODE_ENV !== 'test') console.error(`PAYMENT VERIFICATION FAILED order=${order._id} paypalOrder=${paypalOrderId}: ${result.reason}`);
     await markFailed(order._id, result.reason);
     throw AppError.conflict(`We could not verify your payment (ref ${order._id}). If you were charged, please contact support.`);
   }

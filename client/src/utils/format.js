@@ -25,3 +25,6 @@ export const formatDay = (value) => new Date(value).toLocaleDateString('en-IN', 
 
 // Customers see a short reference (the last 6 characters), the same one the admin can search by.
 export const orderNumber = (id) => String(id).slice(-6).toUpperCase();
+
+export const formatCompactPrice = (amount, currency = CURRENCY) =>
+  new Intl.NumberFormat('en-US', { style: 'currency', currency, notation: 'compact', maximumFractionDigits: 1 }).format(Number(amount) || 0);

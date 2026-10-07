@@ -31,7 +31,8 @@ module.exports = (err, req, res, next) => { // eslint-disable-line no-unused-var
   }
 
   if (status >= 500) {
-    console.error(err);
+    // In tests, failures a test triggers on purpose (they carry an explicit status code) are not logged; surprises still are.
+    if (!(process.env.NODE_ENV === 'test' && err.statusCode)) console.error(err);
     if (isProd) message = 'Something went wrong. Please try again later.';
   }
 
