@@ -1,4 +1,4 @@
-import { formatPrice, imageUrl } from './format';
+import { formatPrice, imageUrl, orderNumber } from './format';
 
 describe('formatPrice', () => {
   it('formats dollars with two decimals', () => {
@@ -19,4 +19,8 @@ describe('imageUrl', () => {
     expect(imageUrl('https://cdn.example.com/a.jpg')).toBe('https://cdn.example.com/a.jpg');
     expect(imageUrl('/images/a.svg')).toBe('/images/a.svg');
   });
+});
+
+describe('orderNumber', () => {
+  it('shows the last 6 characters in capitals', () => { expect(orderNumber('64b7f0f2a1b2c3d4e5f60718')).toBe('F60718'); });
 });

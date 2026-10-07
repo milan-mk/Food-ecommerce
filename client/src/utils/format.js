@@ -22,3 +22,6 @@ export const describeCoupon = (c) => {
 };
 
 export const formatDay = (value) => new Date(value).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+
+// Customers see a short reference (the last 6 characters), the same one the admin can search by.
+export const orderNumber = (id) => String(id).slice(-6).toUpperCase();

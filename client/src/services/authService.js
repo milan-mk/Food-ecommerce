@@ -3,3 +3,8 @@ export const register = (payload) => body(api.post('/auth/register', payload));
 export const login = (payload) => body(api.post('/auth/login', payload));
 export const logout = () => body(api.post('/auth/logout'));
 export const me = () => body(api.get('/auth/me'));
+export const updateProfile = (payload) => body(api.put('/auth/profile', payload));
+export const changePassword = (payload) => body(api.put('/auth/password', payload));
+export const addAddress = (payload) => body(api.post('/auth/addresses', payload));
+export const updateAddress = (id, payload) => body(api.put(`/auth/addresses/${id}`, payload));
+export const deleteAddress = (id) => body(api.delete(`/auth/addresses/${id}`));

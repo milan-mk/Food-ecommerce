@@ -5,8 +5,7 @@ import { useCart } from '../context/CartContext';
 import { useToast } from '../context/ToastContext';
 import { useDocumentTitle } from '../hooks/useDocumentTitle';
 import { getProduct } from '../services/catalogService';
-import { quote as fetchQuote } from '../services/orderService';
-import { toOrderItems } from '../context/cartReducer';
+import { useCartQuote } from '../hooks/useCartQuote';
 import SafeImage from '../components/SafeImage';
 import QuantityStepper from '../components/QuantityStepper';
 import { EmptyState } from '../components/States';
@@ -16,7 +15,6 @@ export default function Cart() {
   useDocumentTitle('Your cart');
   const { items, setQuantity, remove, clear, refresh, couponCode, setCouponCode } = useCart();
   const toast = useToast();
-  const [quote, setQuote] = useState({ loading: false, data: null, error: null });
   const [couponInput, setCouponInput] = useState('');
   const [couponError, setCouponError] = useState('');
 
@@ -49,23 +47,7 @@ export default function Cart() {
   }, []);
 
   // 2) The server prices the cart (tax, delivery, discount). The browser only displays what it returns.
-  useEffect(() => {
-    if (!items.length) { setQuote({ loading: false, data: null, error: null }); return undefined; }
-    let alive = true;
-    setQuote((q) => ({ ...q, loading: true, error: null }));
-    const t = setTimeout(async () => {
-      try {
-        const r = await fetchQuote(toOrderItems(items), couponCode || undefined);
-        if (alive) setQuote({ loading: false, data: r.data, error: null });
-      } catch (err) {
-        if (!alive) return;
-        if ((err.errors || []).some((e) => e.field === 'couponCode')) { setCouponError(err.message); setCouponCode(''); } // bad code: drop it and re-price
-        else setQuote({ loading: false, data: null, error: err });
-      }
-    }, 250);
-    return () => { alive = false; clearTimeout(t); };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [items, couponCode]);
+  const quote = useCartQuote(items, couponCode, { onBadCoupon: (message) => { setCouponError(message); setCouponCode(''); } });
 
   const applyCoupon = (e) => {
     e.preventDefault();

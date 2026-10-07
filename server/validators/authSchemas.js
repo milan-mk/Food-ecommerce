@@ -15,3 +15,6 @@ exports.register = z.object({
 });
 
 exports.login = z.object({ email, password: z.string().min(1, 'Password is required') });
+
+exports.password = password;
+exports.phone = z.string().trim().regex(/^[0-9+\-\s()]{7,15}$/, 'Invalid phone number');

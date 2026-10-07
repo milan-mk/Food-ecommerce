@@ -15,10 +15,12 @@ const Offers = lazy(() => import('./pages/Offers'));
 const About = lazy(() => import('./pages/About'));
 const Services = lazy(() => import('./pages/Services'));
 const Contact = lazy(() => import('./pages/Contact'));
+const Checkout = lazy(() => import('./pages/Checkout'));
+const OrderSuccess = lazy(() => import('./pages/OrderSuccess'));
+const Orders = lazy(() => import('./pages/Orders'));
+const OrderDetail = lazy(() => import('./pages/OrderDetail'));
+const Profile = lazy(() => import('./pages/Profile'));
 const NotFound = lazy(() => import('./pages/NotFound'));
-const PageSoon = lazy(() => import('./pages/PageSoon'));
-
-const soon = (title) => <PageSoon title={title} />;
 
 export default function App() {
   return (
@@ -37,11 +39,12 @@ export default function App() {
           <Route path="services" element={<Services />} />
           <Route path="contact" element={<Contact />} />
 
-          {/* Built in slice 8b */}
           <Route element={<ProtectedRoute />}>
-            <Route path="checkout" element={soon('Checkout')} />
-            <Route path="orders" element={soon('My orders')} />
-            <Route path="profile" element={soon('My profile')} />
+            <Route path="checkout" element={<Checkout />} />
+            <Route path="order-success/:id" element={<OrderSuccess />} />
+            <Route path="orders" element={<Orders />} />
+            <Route path="orders/:id" element={<OrderDetail />} />
+            <Route path="profile" element={<Profile />} />
           </Route>
 
           <Route path="*" element={<NotFound />} />
