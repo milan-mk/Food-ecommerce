@@ -27,7 +27,12 @@ async function createPayment({ orderId, user }) {
   if (existingId) {
     try {
       const existing = await provider.getOrder(existingId);
-      if (REUSABLE.includes(existing.status)) return { paypalOrderId: existingId, approveUrl: existing.approveUrl };
+      if (REUSABLE.includes(existing.status)) {
+        if (order.payment.status === 'failed') { // e.g. a declined card: the buyer is trying again with the same PayPal order
+          await Order.updateOne({ _id: order._id, 'payment.status': 'failed' }, { $set: { 'payment.status': 'pending' }, $unset: { 'payment.failureReason': '' } });
+        }
+        return { paypalOrderId: existingId, approveUrl: existing.approveUrl };
+      }
     } catch (e) { /* expired or unknown at PayPal: create a fresh one below */ }
   }
 

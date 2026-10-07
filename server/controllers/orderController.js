@@ -19,7 +19,7 @@ exports.myOrders = asyncHandler(async (req, res) => {
   const { status, page, limit } = req.query;
   const filter = { user: req.user._id, ...(status ? { status } : {}) };
   const [data, total] = await Promise.all([
-    Order.find(filter).sort({ createdAt: -1 }).skip((page - 1) * limit).limit(limit).lean(),
+    Order.find(filter).sort({ createdAt: -1, _id: -1 }).skip((page - 1) * limit).limit(limit).lean(),
     Order.countDocuments(filter),
   ]);
   res.json({ success: true, data, pagination: { page, limit, total, pages: Math.ceil(total / limit) } });

@@ -10,7 +10,12 @@
     "smoke": "node scripts/smoke-slice2.js",
     "smoke:orders": "node scripts/smoke-slice3.js",
     "smoke:payments": "node scripts/smoke-slice4.js",
-    "test": "jest --runInBand"
+    "smoke:admin": "node scripts/smoke-slice5.js",
+    "admin:cancel": "node scripts/admin-cancel.js",
+    "test": "jest --runInBand",
+    "test:unit": "jest --runInBand tests/unit",
+    "images:generate": "node scripts/generate-product-images.js",
+    "images:apply": "node scripts/apply-images.js"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
@@ -32,5 +37,16 @@
     "nodemon": "^3.1.4",
     "supertest": "^7.0.0"
   },
-  "jest": { "testEnvironment": "node" }
+  "jest": {
+    "testEnvironment": "node",
+    "setupFiles": [
+      "<rootDir>/tests/setupEnv.js"
+    ],
+    "globalSetup": "<rootDir>/tests/globalSetup.js",
+    "globalTeardown": "<rootDir>/tests/globalTeardown.js",
+    "testTimeout": 30000,
+    "testMatch": [
+      "<rootDir>/tests/**/*.test.js"
+    ]
+  }
 }

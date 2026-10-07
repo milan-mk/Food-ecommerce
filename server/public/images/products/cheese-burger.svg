@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" role="img" aria-label="Cheese Burger">
+<rect width="800" height="600" fill="#FFF3CC"/>
+<circle cx="130" cy="110" r="150" fill="#FFC233" opacity=".25"/><circle cx="700" cy="520" r="190" fill="#FFC233" opacity=".2"/>
+<ellipse cx="400" cy="470" rx="230" ry="26" fill="#231815" opacity=".12"/>
+<circle cx="400" cy="300" r="180" fill="#fff" stroke="#231815" stroke-width="6"/>
+<g font-family="'Apple Color Emoji','Segoe UI Emoji','Noto Color Emoji',sans-serif"><text x="400" y="372" font-size="230" text-anchor="middle">🧀</text></g>
+<g transform="translate(226.5 520)"><rect width="347" height="56" rx="12" fill="#231815"/><text x="173.5" y="38.5" font-size="32.8" font-weight="700" fill="#fff" text-anchor="middle" font-family="'DM Sans','Segoe UI',Arial,sans-serif">Cheese Burger</text></g>
+</svg>

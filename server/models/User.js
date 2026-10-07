@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 
+const BCRYPT_ROUNDS = process.env.NODE_ENV === 'test' ? 4 : 12; // 12 in real use; 4 keeps the test suite fast
+
 const addressSchema = new mongoose.Schema({
   label: { type: String, default: 'Home', trim: true },
   fullName: { type: String, required: true, trim: true },
@@ -32,7 +34,7 @@ userSchema.index({ role: 1 });
 
 userSchema.pre('save', async function hashPassword(next) {
   if (!this.isModified('password')) return next();
-  this.password = await bcrypt.hash(this.password, 12);
+  this.password = await bcrypt.hash(this.password, BCRYPT_ROUNDS);
   next();
 });
 

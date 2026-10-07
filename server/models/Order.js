@@ -40,6 +40,8 @@ const orderSchema = new mongoose.Schema(
       paypalOrderId: String,
       transactionId: String, // PayPal capture ID
       failureReason: String,
+      refundId: String,
+      refundedAt: Date,
       amount: Number,
       paidAt: Date,
     },

@@ -91,6 +91,14 @@ module.exports = {
     return { ...o, approveUrl: approveLink(o) };
   },
 
+  // Full refund of a captured payment. Request-Id makes a retried refund return the original result.
+  refundCapture({ captureId, amount, currency }) {
+    return api('POST', `/v2/payments/captures/${encodeURIComponent(captureId)}/refund`, {
+      body: { amount: { value: Number(amount).toFixed(2), currency_code: currency }, note_to_payer: 'Your order was cancelled' },
+      requestId: `refund-${captureId}`,
+    });
+  },
+
   // Request-Id makes retries safe: PayPal returns the original result instead of capturing twice.
   captureOrder(paypalOrderId) {
     return api('POST', `/v2/checkout/orders/${encodeURIComponent(paypalOrderId)}/capture`, { body: {}, requestId: `capture-${paypalOrderId}` });
