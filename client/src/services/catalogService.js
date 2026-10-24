@@ -1,0 +1,10 @@
+import api, { body } from './api';
+export const getProducts = (params, opts) => body(api.get('/products', { params, ...opts }));
+export const getProduct = (idOrSlug, opts) => body(api.get(`/products/${idOrSlug}`, opts));
+export const getCategories = (opts) => body(api.get('/categories', opts));
+export const getActiveCoupons = (opts) => body(api.get('/coupons/active', opts));
+export const validateCoupon = (code, items) => body(api.post('/coupons/validate', { code, items }));
+export const getReviews = (productId, params, opts) => body(api.get(`/products/${productId}/reviews`, { params, ...opts }));
+export const addReview = (productId, payload) => body(api.post(`/products/${productId}/reviews`, payload));
+export const updateReview = (id, payload) => body(api.put(`/reviews/${id}`, payload));
+export const deleteReview = (id) => body(api.delete(`/reviews/${id}`));

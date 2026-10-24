@@ -1,0 +1,38 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; } }
+  body { @apply bg-white font-body text-ink antialiased; }
+  h1, h2, h3, h4 { @apply font-display font-extrabold tracking-tight; }
+  :focus-visible { outline: 3px solid #231815; outline-offset: 2px; }
+  img { @apply max-w-full; }
+}
+
+@layer components {
+  .container-page { @apply mx-auto w-full max-w-6xl px-4 sm:px-6; }
+
+  .btn { @apply inline-flex min-h-[44px] items-center justify-center gap-2 rounded-lg px-5 py-2.5 text-base font-bold transition active:translate-y-px disabled:cursor-not-allowed disabled:opacity-50; }
+  .btn-primary { @apply btn bg-ketchup text-white hover:bg-ketchup-dark; }
+  .btn-dark { @apply btn bg-ink text-white hover:bg-black; }
+  .btn-ghost { @apply btn border-2 border-ink bg-white text-ink hover:bg-surface; }
+  .btn-sm { @apply min-h-[40px] px-4 py-2 text-sm; }
+
+  .label { @apply mb-1.5 block text-sm font-bold; }
+  .input { @apply min-h-[44px] w-full rounded-lg border-2 border-line bg-white px-3.5 py-2 text-base placeholder:text-muted/70 hover:border-ink/40 focus:border-ink; }
+  .input-error { @apply border-ketchup; }
+
+  .chip { @apply inline-flex items-center rounded-full bg-surface px-3 py-1 text-sm font-bold; }
+  .skeleton { @apply animate-pulse rounded-lg bg-surface; }
+
+  /* The signature element: a perforated order ticket with a hard offset shadow. */
+  .ticket { @apply relative rounded-md border-2 border-ink bg-white shadow-ticket; }
+  .ticket-divider { @apply relative my-5 border-t-2 border-dashed border-ink/40; }
+  .ticket-divider::before, .ticket-divider::after {
+    content: ''; @apply absolute -top-[11px] h-5 w-5 rounded-full border-2 border-ink bg-white;
+  }
+  .ticket-divider::before { left: -13px; clip-path: inset(0 0 0 50%); }
+  .ticket-divider::after { right: -13px; clip-path: inset(0 50% 0 0); }
+}
