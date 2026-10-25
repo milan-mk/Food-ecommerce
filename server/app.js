@@ -6,13 +6,13 @@ const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
 const mongoSanitize = require('express-mongo-sanitize');
 const rateLimit = require('express-rate-limit');
-const { clientUrl, env } = require('./config/env');
+const { clientUrl, env, trustProxy } = require('./config/env');
 const notFound = require('./middleware/notFound');
 const errorHandler = require('./middleware/errorHandler');
 
 const app = express();
 
-app.set('trust proxy', 1); // correct client IPs behind Render/Railway proxies
+app.set('trust proxy', trustProxy); // correct client IPs (for rate limiting) behind Render/Railway/Vercel proxies
 app.use(helmet({ crossOriginResourcePolicy: { policy: 'cross-origin' } })); // lets the client load /images
 app.use(cors({ origin: clientUrl, credentials: true }));
 app.use(express.json({ limit: '10kb' }));

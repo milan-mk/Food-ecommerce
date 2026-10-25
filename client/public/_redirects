@@ -1,0 +1,5 @@
+# Netlify equivalent of vercel.json: proxy the API (so login cookies stay first-party) and support deep links.
+# Replace YOUR-API.onrender.com with your real API host.
+/api/*     https://YOUR-API.onrender.com/api/:splat     200
+/images/*  https://YOUR-API.onrender.com/images/:splat  200
+/*         /index.html                                   200

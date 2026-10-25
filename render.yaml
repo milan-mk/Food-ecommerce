@@ -1,0 +1,19 @@
+# Optional Render "Blueprint" for the API. Secrets (sync: false) are entered in the Render dashboard, never committed.
+services:
+  - type: web
+    name: snackyard-api
+    runtime: node
+    rootDir: server
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - { key: NODE_ENV, value: production }
+      - { key: TRUST_PROXY, value: "2" }
+      - { key: CURRENCY, value: USD }
+      - { key: PAYPAL_ENVIRONMENT, value: sandbox }
+      - { key: MONGODB_URI, sync: false }
+      - { key: JWT_SECRET, sync: false }
+      - { key: CLIENT_URL, sync: false }
+      - { key: PAYPAL_CLIENT_ID, sync: false }
+      - { key: PAYPAL_CLIENT_SECRET, sync: false }

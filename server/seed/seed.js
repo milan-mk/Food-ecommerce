@@ -1,4 +1,7 @@
-// Usage: npm run seed   (wipes users/categories/products/reviews/coupons/orders, then reseeds)
+// Usage:
+//   npm run seed        DEVELOPMENT: wipes users/categories/products/reviews/coupons/orders, then reseeds (adds demo accounts).
+//   npm run seed:menu   PRODUCTION-SAFE: loads only the menu (categories, products, coupons). No users, no demo passwords.
+//                       Refuses to run if any orders exist, so it can never destroy real sales history.
 const { isProd } = require('../config/env');
 const connectDB = require('../config/db');
 const mongoose = require('mongoose');
@@ -14,13 +17,25 @@ const Order = require('../models/Order');
 
 const { categories, products } = require('./data');
 
+const menuOnly = process.argv.includes('--menu-only');
+
 async function seed() {
-  if (isProd && process.env.ALLOW_PROD_SEED !== 'true') {
+  if (!menuOnly && isProd && process.env.ALLOW_PROD_SEED !== 'true') {
     console.error('Refusing to seed in production (set ALLOW_PROD_SEED=true to override).');
     process.exit(1);
   }
   await connectDB();
-  await Promise.all([User, Category, Product, Review, Coupon, Order].map((m) => m.deleteMany({})));
+  if (menuOnly) {
+    const orders = await Order.countDocuments();
+    if (orders > 0) {
+      console.error(`Refusing to reload the menu: ${orders} order(s) already exist and reference these products.`);
+      await mongoose.disconnect();
+      process.exit(1);
+    }
+    await Promise.all([Category, Product, Review, Coupon].map((m) => m.deleteMany({})));
+  } else {
+    await Promise.all([User, Category, Product, Review, Coupon, Order].map((m) => m.deleteMany({})));
+  }
 
   const cats = await Category.create(categories.map(([name, description]) => ({ name, description })));
   const catId = Object.fromEntries(cats.map((c) => [c.name, c._id]));
@@ -34,10 +49,12 @@ async function seed() {
 
   const adminEmail = process.env.SEED_ADMIN_EMAIL || 'admin@example.com';
   const adminPass = process.env.SEED_ADMIN_PASSWORD || 'Admin@12345';
-  await User.create([
-    { name: 'Admin', email: adminEmail, password: adminPass, role: 'admin' },
-    { name: 'Demo Customer', email: 'customer@example.com', password: 'Customer@123', phone: '9999999999' },
-  ]);
+  if (!menuOnly) {
+    await User.create([
+      { name: 'Admin', email: adminEmail, password: adminPass, role: 'admin' },
+      { name: 'Demo Customer', email: 'customer@example.com', password: 'Customer@123', phone: '9999999999' },
+    ]);
+  }
 
   const nextYear = new Date(); nextYear.setFullYear(nextYear.getFullYear() + 1);
   await Coupon.create([
@@ -45,9 +62,14 @@ async function seed() {
     { code: 'SAVE3', description: '$3 off orders over $15', discountType: 'fixed', discountValue: 3, minOrder: 15, expiresAt: nextYear },
   ]);
 
-  console.log(`Seeded ${cats.length} categories, ${products.length} products, 2 users, 2 coupons.`);
-  console.log(`Admin login: ${adminEmail} / ${adminPass}`);
-  console.log('Customer login: customer@example.com / Customer@123');
+  if (menuOnly) {
+    console.log(`Menu loaded: ${cats.length} categories, ${products.length} products, 2 coupons. No user accounts were created.`);
+    console.log('Next: create your admin with  npm run create-admin --prefix server');
+  } else {
+    console.log(`Seeded ${cats.length} categories, ${products.length} products, 2 users, 2 coupons.`);
+    console.log(`Admin login: ${adminEmail} / ${adminPass}`);
+    console.log('Customer login: customer@example.com / Customer@123');
+  }
   await mongoose.disconnect();
 }
 

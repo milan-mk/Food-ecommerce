@@ -11,6 +11,15 @@ if (missing.length && process.env.NODE_ENV !== 'test') {
 
 const paypalEnv = process.env.PAYPAL_ENVIRONMENT === 'live' ? 'live' : 'sandbox'; // anything else falls back to sandbox
 
+if (process.env.NODE_ENV === 'production') {
+  const secret = process.env.JWT_SECRET || '';
+  if (secret.length < 32 || /^change-me/i.test(secret)) {
+    console.error('JWT_SECRET must be a random string of at least 32 characters in production.');
+    console.error('Generate one with: node -e "console.log(require(\'crypto\').randomBytes(48).toString(\'hex\'))"');
+    process.exit(1);
+  }
+}
+
 const num = (v, d) => (v !== undefined && v !== '' && !Number.isNaN(Number(v)) ? Number(v) : d);
 
 module.exports = {
@@ -18,6 +27,7 @@ module.exports = {
   isProd: process.env.NODE_ENV === 'production',
   port: num(process.env.PORT, 5000),
   clientUrl: process.env.CLIENT_URL || 'http://localhost:5173',
+  trustProxy: num(process.env.TRUST_PROXY, 1), // number of reverse proxies in front of the API (1 on Render alone, 2 behind a Vercel rewrite + Render)
   mongoUri: process.env.MONGODB_URI,
   jwt: {
     secret: process.env.JWT_SECRET || 'test-secret',

@@ -5,8 +5,18 @@
     "install:all": "npm install --prefix server && npm install --prefix client",
     "dev": "concurrently -n server,client -c yellow,cyan \"npm run dev --prefix server\" \"npm run dev --prefix client\"",
     "seed": "npm run seed --prefix server",
-    "test": "npm test --prefix server",
-    "build": "npm run build --prefix client"
+    "test": "npm run test:server && npm run test:client",
+    "build": "npm run build --prefix client",
+    "test:server": "npm test --prefix server",
+    "test:client": "npm test --prefix client",
+    "seed:menu": "npm run seed:menu --prefix server",
+    "create-admin": "npm run create-admin --prefix server",
+    "images:apply": "npm run images:apply --prefix server"
   },
-  "devDependencies": { "concurrently": "^8.2.2" }
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "engines": {
+    "node": ">=18"
+  }
 }

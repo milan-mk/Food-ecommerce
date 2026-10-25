@@ -15,7 +15,9 @@
     "test": "jest --runInBand",
     "test:unit": "jest --runInBand tests/unit",
     "images:generate": "node scripts/generate-product-images.js",
-    "images:apply": "node scripts/apply-images.js"
+    "images:apply": "node scripts/apply-images.js",
+    "create-admin": "node scripts/create-admin.js",
+    "seed:menu": "node seed/seed.js --menu-only"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
@@ -48,5 +50,8 @@
     "testMatch": [
       "<rootDir>/tests/**/*.test.js"
     ]
+  },
+  "engines": {
+    "node": ">=18"
   }
 }
